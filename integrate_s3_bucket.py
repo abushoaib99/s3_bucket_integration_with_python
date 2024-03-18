@@ -1,11 +1,8 @@
-import os
-
 import boto3
 import environ
 
-BASE_DIR_DEV = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR_DEV, '.env'))
+env = environ.Env(DEBUG=(bool, False))
+environ.Env.read_env('.env')
 
 # AWS credentials and region
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
