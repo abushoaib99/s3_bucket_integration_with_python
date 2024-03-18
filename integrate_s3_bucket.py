@@ -56,6 +56,25 @@ class S3Bucket:
         except Exception as e:
             print(f"Error generating URL: {e}")
 
+    # Function to list objects in S3 bucket
+    def list_objects(self):
+        try:
+            response = s3_client.list_objects_v2(Bucket=self.bucket_name)
+            if 'Contents' in response:
+                objects = response['Contents']
+                for obj in objects:
+                    object_key = obj['Key']
+                    self.object_name = object_key
+                    signed_url = self.generate_signed_url_for_get()
+                    if signed_url:
+                        print(f"Pre-signed URL for object '{object_key}': {signed_url}")
+                    else:
+                        print(f"Failed to generate pre-signed URL for object '{object_key}'.")
+            else:
+                print("No objects found in the bucket.")
+        except Exception as e:
+            print(f"Error listing objects: {e}")
+
 
 def main():
     file_path = ''
@@ -68,9 +87,11 @@ def main():
         file_path=file_path
     )
 
-    signed_url = s3_bucket.generate_signed_url_for_get()
+    # signed_url = s3_bucket.generate_signed_url_for_get()
     # signed_url = s3_bucket.generate_signed_url_for_put()
-    print(f"URL for the file: {signed_url}")
+    # print(f"URL for the file: {signed_url}")
+
+    s3_bucket.list_objects()
 
 
 if __name__ == "__main__":
